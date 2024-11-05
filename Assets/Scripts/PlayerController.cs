@@ -14,12 +14,59 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // Horizontal movement
+        #if UNITY_EDITOR // Use keyboard controls for testing in Unity editor
+        HandleKeyboardControls();
+        #else // Use touch controls on mobile
+            HandleTouchControls();
+        #endif
+    }
+
+    private void HandleKeyboardControls()
+    {
+        // For testing in editor
         float moveInput = Input.GetAxis("Horizontal");
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
 
-        // Jump
         if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        }
+    }
+
+    private void HandleTouchControls()
+    {
+        if (Input.touchCount > 0)
+        {
+            foreach (Touch touch in Input.touches)
+            {
+                if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Stationary)
+                {
+                    float screenWidth = Screen.width;
+
+                    // Left side of the screen for left-right movement
+                    if (touch.position.x < screenWidth / 2)
+                    {
+                        float direction = touch.position.x < screenWidth / 4 ? -1 : 1; // left or right within the left side
+                        MoveHorizontal(direction);
+                    }
+                    // Right side of the screen for jump
+                    else
+                    {
+                        Jump();
+                    }
+                }
+            }
+        }
+    }
+
+    private void MoveHorizontal(float direction)
+    {
+        rb.linearVelocity = new Vector2(direction * moveSpeed, rb.linearVelocity.y);
+    }
+
+    private void Jump()
+    {
+        if (isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
