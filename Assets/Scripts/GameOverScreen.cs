@@ -7,4 +7,9 @@ public class GameOverScreen : MonoBehaviour
     {
         SceneManager.LoadScene("Level 1");
     }
+
+    public void MainMenuScene()
+    {
+        SceneManager.LoadScene("Main Menu");
+    }
 }
