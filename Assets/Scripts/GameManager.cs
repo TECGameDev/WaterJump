@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour {
         }
         else {
             // If no lives left, restart the game or go to Game Over screen
-            SceneManager.LoadScene("Main Menu");
+            SceneManager.LoadScene("Game Over");
         }
     }
 
