@@ -1,3 +1,4 @@
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -35,6 +36,13 @@ public class GameManager : MonoBehaviour
     {
         // Re-initialize the player and respawn position whenever a new scene is loaded
         InitializeLevel();
+
+        // Check if the current scene is the starting or main game scene to reset lives
+        if (GameObject.FindObjectOfType<GameOverScreen>() != null)
+        {
+            ResetLives();
+        }
+
     }
 
     private void InitializeLevel()
@@ -83,7 +91,7 @@ public class GameManager : MonoBehaviour
             }
 
             // Moves the water to its respawn position
-            if(water != null)
+            if (water != null)
             {
                 water.transform.position = initialWaterPosition;
             }
@@ -91,13 +99,18 @@ public class GameManager : MonoBehaviour
         else
         {
             // If no lives left, restart the game or go to Game Over screen
-            SceneManager.LoadScene("Main Menu");
+            SceneManager.LoadScene("Game Over");
         }
     }
 
     public void SetRespawnPoint(Vector2 newRespawnPosition)
     {
         respawnPosition = newRespawnPosition;
+    }
+
+    private void ResetLives() // Resets the lives to the starting value
+    {
+        lives = 3;
     }
 
     private void OnDestroy()
